@@ -1,0 +1,101 @@
+================================================================================
+Minimal module
+================================================================================
+
+MODULE main
+  VAR request : boolean;
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (module
+    name: (identifier)
+    (var_declaration
+      (variable_definition
+        name: (identifier)
+        type: (boolean_type)))))
+
+================================================================================
+Enum and range types
+================================================================================
+
+MODULE main
+  VAR
+    state : {ready, busy};
+    count : 0..15;
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (module
+    name: (identifier)
+    (var_declaration
+      (variable_definition
+        name: (identifier)
+        type: (enum_type
+          (identifier)
+          (identifier)))
+      (variable_definition
+        name: (identifier)
+        type: (range_type
+          low: (integer_literal)
+          high: (integer_literal))))))
+
+================================================================================
+Word type with sign
+================================================================================
+
+MODULE main
+  VAR bits : unsigned word[8];
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (module
+    name: (identifier)
+    (var_declaration
+      (variable_definition
+        name: (identifier)
+        type: (word_type
+          width: (integer_literal))))))
+
+================================================================================
+Assignments with init and next
+================================================================================
+
+MODULE main
+  ASSIGN
+    init(state) := ready;
+    next(state) := busy;
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (module
+    name: (identifier)
+    (assign_declaration
+      (assignment
+        target: (init_target
+          (identifier))
+        value: (identifier))
+      (assignment
+        target: (next_target
+          (identifier))
+        value: (identifier)))))
+
+================================================================================
+Comments
+================================================================================
+
+-- a line comment
+/-- a block
+    comment --/
+MODULE main
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (comment)
+  (comment)
+  (module
+    name: (identifier)))

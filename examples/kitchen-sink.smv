@@ -1,0 +1,82 @@
+-- line comment
+/-- a block
+    comment spanning lines --/
+
+MODULE counter(limit, clock)
+  VAR
+    value    : 0..15;
+    bits     : unsigned word[8];
+    mode     : {idle, running, done};
+    flag     : boolean;
+    grid     : array 0..3 of array 0..3 of boolean;
+    sub      : worker(value, flag);
+    proc     : process worker(value, flag);
+
+  IVAR
+    reset : boolean;
+
+  FROZENVAR
+    seed : 0..255;
+
+  DEFINE
+    at_limit  := value >= limit;
+    doubled   := value * 2 + 1;
+    masked    := bits & 0ud8_15;
+    shifted   := bits << 2;
+    picked    := value in {1, 2, 3};
+    joined    := bits :: bits;
+    negative  := -value;
+    choice    := at_limit ? 0 : value + 1;
+
+  CONSTANTS idle, running, done;
+
+  ASSIGN
+    init(value) := 0;
+    next(value) := case
+      reset          : 0;
+      value < limit  : value + 1;
+      TRUE           : value;
+    esac;
+    init(mode) := idle;
+    next(mode) := case
+      mode = idle & !reset : running;
+      TRUE                 : {idle, running};
+    esac;
+    flag := sub.ready;
+
+  TRANS
+    next(value) >= value | reset;
+
+  INIT
+    value = 0;
+
+  INVAR
+    value <= limit;
+
+  FAIRNESS running;
+  JUSTICE  !reset;
+  COMPASSION (reset, at_limit);
+
+  -- specifications
+  SPEC      AG (value <= limit);
+  CTLSPEC   AG (reset -> AX value = 0);
+  CTLSPEC   EF EG at_limit;
+  CTLSPEC   A [ value = 0 U mode = done ];
+  CTLSPEC   E [ value = 0 BU 1..5 mode = done ];
+  CTLSPEC   EBF 1..3 at_limit;
+  CTLSPEC NAME bounded := AG (value < 16);
+  LTLSPEC   G (reset -> F mode = idle);
+  LTLSPEC   value = 0 U mode = done;
+  LTLSPEC   H at_limit & O reset;
+  INVARSPEC value <= 15;
+  COMPUTE   MAX [ value = 0, mode = done ];
+
+MODULE worker(v, f)
+  VAR ready : boolean;
+  ASSIGN
+    init(ready) := FALSE;
+    next(ready) := v > 0 & !f;
+
+MODULE main
+  VAR c : counter(10, TRUE);
+  SPEC AG !c.sub.ready

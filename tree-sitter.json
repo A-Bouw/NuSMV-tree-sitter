@@ -1,0 +1,24 @@
+{
+  "grammars": [
+    {
+      "name": "smv",
+      "camelcase": "Smv",
+      "scope": "source.smv",
+      "path": ".",
+      "file-types": ["smv"],
+      "highlights": ["queries/highlights.scm"],
+      "injection-regex": "^(smv|nusmv|nuxmv)$"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "NuSMV / nuXmv grammar for tree-sitter",
+    "authors": [
+      {
+        "name": "677",
+        "email": "677@tuta.com"
+      }
+    ]
+  }
+}

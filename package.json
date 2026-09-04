@@ -1,0 +1,28 @@
+{
+  "name": "tree-sitter-smv",
+  "version": "0.1.0",
+  "description": "NuSMV / nuXmv grammar for tree-sitter",
+  "license": "MIT",
+  "keywords": [
+    "parser",
+    "tree-sitter",
+    "nusmv",
+    "nuxmv",
+    "smv",
+    "model-checking"
+  ],
+  "scripts": {
+    "generate": "tree-sitter generate",
+    "test": "tree-sitter test",
+    "parse": "tree-sitter parse"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.27.0"
+  },
+  "files": [
+    "grammar.js",
+    "queries/",
+    "src/",
+    "tree-sitter.json"
+  ]
+}
